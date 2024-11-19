@@ -2,6 +2,8 @@ import java.util.Scanner;
 
 public class Main {
     public static int tries = 0;
+    public static boolean isGameNotOver = true;
+
     public static void main(String[] args) {
         guessingGame();
     }
@@ -10,15 +12,31 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         String guess = null;
         String word = "placeholder";
-        while (!word.equals(guess)) {
+        if ((isGameNotOver)){
+            tries = 0;
+        }
+        while (!word.equals(guess) && isGameNotOver) {
             tries++;
             guess = scanner.next();
             if (guess.equals(word)) {
                 winner();
+                isGameNotOver = true;
             } else if (!guess.equals(word)) {
                 hangman();
+                wordChecker(word, guess);
             }
         }
+    }
+    public static void wordChecker(String word, String guess) {
+        System.out.println("Matching characters:");
+        StringBuilder matching = new StringBuilder("_".repeat(word.length())); // basically converts string into char
+        for (int i = 0; i < guess.length(); i++) {
+            char guessedChar = guess.charAt(i);
+            if (i < word.length() && word.charAt(i) == guessedChar) {
+                matching.setCharAt(i, guessedChar);
+            }
+        }
+        System.out.println("Letters in correct spot: " + matching);
     }
     public static void hangman(){
         if (tries == 1) {
@@ -46,7 +64,13 @@ public class Main {
         }
     }
     public static void gameOver(){
-        System.out.println("Game over, he is dead!"); // most likely replace with whatever restarts the game
+        for (int i = 0; i<=15; i++ ){ // clears console
+            System.out.println();
+        }
+        System.out.println("Game over, he is dead!");
+        System.out.println("");
+        isGameNotOver = true;
+        guessingGame();
     }
     public static void winner(){
         System.out.println("You won! He survives!");
